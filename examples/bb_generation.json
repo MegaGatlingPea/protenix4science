@@ -1,0 +1,38 @@
+[
+    {
+      "name": "1-7pzb",
+      "pdb": "/home/jin_zi_chang/protenix4science/examples/7pzb.pdb",
+      "fixed": "47-47,A86-86,56-56,A168-168,26-26,A197-197,48-48",
+      "fixed_type": "proteinbb, proteinChain, proteinbb, proteinChain, proteinbb, proteinChain, proteinbb",
+      "fixed_atom": {
+        "A86": "O,C,CA",
+        "A168": "NE2,CD2,CE1,CG,ND1",
+        "A197": "NZ,CE,CD"
+      },
+      "length": "180-180"
+    },
+    {
+        "name": "1-7pzb",
+        "pdb": "/home/jin_zi_chang/protenix4science/examples/7pzb.pdb",
+        "fixed": "47-47,A86-86,56-56,A168-168,26-26,A197-197,48-48",
+        "fixed_type": "proteinbb, proteinChain, proteinbb, proteinChain, proteinbb, proteinChain, proteinbb",
+        "fixed_atom": {
+          "A86": "O,C,CA",
+          "A168": "NE2,CD2,CE1,CG,ND1",
+          "A197": "NZ,CE,CD"
+        },
+        "length": "180-180"
+    },
+    {
+        "name": "3-7pzb",
+        "pdb": "/home/jin_zi_chang/protenix4science/examples/7pzb.pdb",
+        "fixed": "47-47,A86-86,56-56,A168-168,26-26,A197-197,48-48",
+        "fixed_type": "proteinbb, proteinChain, proteinbb, proteinChain, proteinbb, proteinChain, proteinbb",
+        "fixed_atom": {
+          "A86": "O,C,CA",
+          "A168": "NE2,CD2,CE1,CG,ND1",
+          "A197": "NZ,CE,CD"
+        },
+        "length": "180-180"
+    }
+]
