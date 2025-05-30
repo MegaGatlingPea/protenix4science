@@ -180,3 +180,4 @@ test.py
 *.pkl
 launch.json
 wandb/
+release_data/ccd_cache/*

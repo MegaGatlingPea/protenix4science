@@ -25,8 +25,9 @@ from protenix.data.parser import AddAtomArrayAnnot
 from protenix.data.tokenizer import AtomArrayTokenizer, TokenArray
 from protenix.data.utils import int_to_letters
 
-# [Zichang] START import predefined backbone atoms
+# [Zichang] START import predefined backbone atoms and convert metadata
 from protenix.data.constants import PROTEIN_BACKBONE_ATOM_NAMES, NA_BACKBONE_ATOM_NAMES, BACKBONE_ATOM_NAMES
+from protenix.data.utils import convert_metadata
 # [Zichang] END
 
 logger = logging.getLogger(__name__)
@@ -37,6 +38,8 @@ class SampleDictToFeatures:
         self.single_sample_dict = single_sample_dict
         # [Zichang] START Pop metadata key and get its value
         self.metadata = single_sample_dict.pop('metadata', None)
+        if self.metadata is not None:
+            self.metadata = convert_metadata(self.metadata)
         # [Zichang] END
         self.input_dict = add_entity_atom_array(single_sample_dict)
         self.entity_poly_type = self.get_entity_poly_type()

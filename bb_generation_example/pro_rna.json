@@ -1,0 +1,26 @@
+[
+  {
+    "name": "1qa6_pro_rna",
+    "pdb": "/home/megagatlingpea/workdir/protenix4science/bb_generation_example/1qa6_pro_rna.pdb",
+    "entities": [
+      {
+        "entity_type": "proteinChain",
+        "fixed": "3-3,A7-10,3-3,A11-14,3-3,A15-18,3-3",
+        "fixed_type": "proteinbb, proteinChain, proteinbb, proteinChain, proteinbb, proteinChain, proteinbb",
+        "fixed_atom": {
+          "A8": "CG,CD",
+          "A9": "CG,CD",
+          "A12": "CG1,CG2"
+        },
+        "length": "24-24"
+      },
+      {
+        "entity_type": "rnaSequence",
+        "fixed": "3-3,C101-104,3-3,C105-108,3-3,C109-112,3-3",
+        "fixed_type": "rnabb, rnaSequence, rnabb, rnaSequence, rnabb, rnaSequence, rnabb",
+        "fixed_atom": {},
+        "length": "24-24"
+      }
+    ]
+  }
+]

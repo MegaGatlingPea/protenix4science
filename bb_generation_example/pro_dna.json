@@ -1,0 +1,24 @@
+[
+  {
+    "name": "1tgh_pro_dna",
+    "pdb": "/home/megagatlingpea/workdir/protenix4science/bb_generation_example/1tgh_pro_dna.pdb",
+    "entities": [
+      {
+        "entity_type": "proteinChain",
+        "fixed": "3-3,A155-158,3-3,A159-162,3-3,A163-166,3-3",
+        "fixed_type": "proteinbb, proteinChain, proteinbb, proteinChain, proteinbb, proteinChain, proteinbb",
+        "fixed_atom": {},
+        "length": "24-24"
+      },
+      {
+        "entity_type": "dnaSequence",
+        "fixed": "3-3,B101-104,3-3,B105-108,3-3,B109-112,3-3",
+        "fixed_type": "dnabb, dnaSequence, dnabb, dnaSequence, dnabb, dnaSequence, dnabb",
+        "fixed_atom": {
+          "B111": "N3,N4"
+        },
+        "length": "24-24"
+      }
+    ]
+  }
+]

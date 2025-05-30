@@ -32,7 +32,7 @@ import json
 from biotite.structure.io import load_structure
 import biotite.structure as struc
 from protenix.data.constants import mmcif_restype_3to1 as AA_3TO1
-from protenix.data.constants import PROTEIN_REP_RESIDUE
+from protenix.data.constants import PROTEIN_REP_RESIDUE, DNA_REP_RESIDUE, RNA_REP_RESIDUE
 # [Zichang] END
 
 from protenix.data.constants import DNA_STD_RESIDUES, PRO_STD_RESIDUES, RNA_STD_RESIDUES
@@ -787,7 +787,7 @@ def pdb_to_cif(input_fname: str, output_fname: str, entry_id: str = None):
     )
 
 # [Zichang] START 添加bb generation配置文件转换为output_json和condition atom masks
-def convert_bb_configs(config_file_path,dump=False,output_path=None):
+def convert_bb_configs(config_file_path, dump=False, output_path=None):
     """
     Convert bb generation configuration file to output_json and condition atom masks
     
@@ -808,49 +808,77 @@ def convert_bb_configs(config_file_path,dump=False,output_path=None):
         for i in range(len(bb_configs)):
             bb_config = bb_configs[i]
             
-            # Parse configuration string
-            bb_config['fixed'] = bb_config['fixed'].split(',')
-            bb_config['fixed_type'] = bb_config['fixed_type'].split(', ')
-            for fixed_residue, bb_atom in bb_config['fixed_atom'].items():
-                bb_config['fixed_atom'][fixed_residue] = bb_atom.split(',')
-            
-            # Load structure
+            # Load structure once for this bb_config
             stack = load_structure(bb_config['pdb'])
-
-            # build infer sequence
-            infer_seq = []
-            output_dict = {'sequences': [], 'name': '', 'metadata': {}}
-
-            for j in range(len(bb_config['fixed'])):
-                if bb_config['fixed_type'][j] == 'proteinbb':
-                    min_len, max_len = map(int, bb_config['fixed'][j].split('-'))
-                    assert min_len <= max_len
-                    # random select length between min_len and max_len, need further modification
-                    length = np.random.randint(min_len, max_len + 1)
-                    for _ in range(length):
-                        infer_seq.append(AA_3TO1[PROTEIN_REP_RESIDUE])
-                elif bb_config['fixed_type'][j] == 'proteinChain':
-                    chain_id = bb_config['fixed'][j].split('-')[0][0]
-                    res_id = int(bb_config['fixed'][j].split('-')[1])
-                    mask = (stack.chain_id == chain_id) & (stack.res_id == res_id)
-                    res_name = stack[np.where(mask)[0][0]].res_name
-                    infer_seq.append(AA_3TO1[res_name])
             
-            infer_seq = ''.join(infer_seq)
-            output_dict['name'] = bb_config['name']
-            output_dict['sequences'].append({
-                "proteinChain": {
-                    "sequence": infer_seq,
-                    "count": 1
-                }
-            })
-
-            # metadata for condition mask generation
-            output_dict['metadata']['fpath'] = bb_config['pdb']
-            output_dict['metadata']['fixed_atom'] = bb_config['fixed_atom']
-            output_dict['metadata']['fixed_type'] = bb_config['fixed_type']
-            output_dict['metadata']['fixed'] = bb_config['fixed']
+            # Create output_dict for this bb_config
+            output_dict = {'sequences': [], 'metadata': [], 'name': bb_config['name']}
             
+            # Process each entity in this bb_config
+            for k in range(len(bb_config['entities'])):
+                bb_config_entity = bb_config['entities'][k]
+                
+                # Parse configuration string
+                bb_config_entity['fixed'] = bb_config_entity['fixed'].split(',')
+                bb_config_entity['fixed_type'] = bb_config_entity['fixed_type'].split(', ')
+                for fixed_residue, bb_atom in bb_config_entity['fixed_atom'].items():
+                    bb_config_entity['fixed_atom'][fixed_residue] = bb_atom.split(',')
+                
+                # build infer sequence
+                infer_seq = []
+
+                for j in range(len(bb_config_entity['fixed'])):
+                    if bb_config_entity['fixed_type'][j] in ['proteinbb', 'dnabb', 'rnabb']:
+                        min_len, max_len = map(int, bb_config_entity['fixed'][j].split('-'))
+                        assert min_len <= max_len
+                        # random select length between min_len and max_len, need further modification
+                        length = np.random.randint(min_len, max_len + 1)
+                        for _ in range(length):
+                            if bb_config_entity['fixed_type'][j] == 'proteinbb':
+                                infer_seq.append(AA_3TO1[PROTEIN_REP_RESIDUE])
+                            elif bb_config_entity['fixed_type'][j] == 'dnabb':
+                                infer_seq.append(DNA_REP_RESIDUE[1]) # 'DC -> C'
+                            elif bb_config_entity['fixed_type'][j] == 'rnabb':
+                                infer_seq.append(RNA_REP_RESIDUE) # 'C'
+                    elif bb_config_entity['fixed_type'][j] in ['proteinChain', 'dnaSequence', 'rnaSequence']:
+                        # Parse chain and residue range (format: B86-98 or B86-86)
+                        chain_res = bb_config_entity['fixed'][j]
+                        parts = chain_res.split('-')
+                        
+                        # Extract chain_id, start_res, end_res
+                        chain_id = parts[0][0]  # First character is chain ID
+                        start_res = int(parts[0][1:])  # Rest of first part is start residue
+                        end_res = int(parts[1])  # Second part is end residue
+                        
+                        # Add all residues in the range (inclusive)
+                        for res_id in range(start_res, end_res + 1):
+                            mask = (stack.chain_id == chain_id) & (stack.res_id == res_id)
+                            if np.any(mask):
+                                res_name = stack[np.where(mask)[0][0]].res_name
+                                if len(res_name) == 3:
+                                    infer_seq.append(AA_3TO1[res_name])
+                                elif len(res_name) == 2:
+                                    infer_seq.append(res_name[1])
+                                else:
+                                    infer_seq.append(res_name)
+                
+                infer_seq = ''.join(infer_seq)
+                
+                # Add sequence for this entity
+                output_dict['sequences'].append({
+                    bb_config_entity['entity_type']: {
+                        "sequence": infer_seq,
+                        "count": 1
+                    }
+                })
+
+                # Add metadata for this entity
+                output_dict['metadata'].append({
+                    'fixed_atom': bb_config_entity['fixed_atom'],
+                    'fixed': bb_config_entity['fixed']
+                })
+            
+            # Add the completed output_dict to output_json
             output_json.append(output_dict)
 
     # for test
@@ -866,7 +894,37 @@ def convert_bb_configs(config_file_path,dump=False,output_path=None):
         print(f"Successfully converted {len(output_json)} configurations")
         print(f"Output saved to: {output_path}")
 
-    return output_json
+    return output_json 
+
+def convert_metadata(metadata_list):
+    """
+    Convert metadata list of dictionaries to a single merged dictionary
+    
+    Args:
+        metadata_list (List[Dict]): The metadata list from a single output_json item
+    
+    Returns:
+        Dict: Merged metadata dictionary
+    """
+    merged_metadata = {}
+    
+    for metadata_dict in metadata_list:
+        for key, value in metadata_dict.items():
+            if key in merged_metadata:
+                # If key already exists, merge the values
+                if isinstance(value, list) and isinstance(merged_metadata[key], list):
+                    merged_metadata[key].extend(value)
+                elif isinstance(value, dict) and isinstance(merged_metadata[key], dict):
+                    merged_metadata[key].update(value)
+                else:
+                    # For other types, create a list to hold multiple values
+                    if not isinstance(merged_metadata[key], list):
+                        merged_metadata[key] = [merged_metadata[key]]
+                    merged_metadata[key].append(value)
+            else:
+                merged_metadata[key] = value
+    
+    return merged_metadata 
 # [Zichang] END
 
 if __name__ == "__main__":

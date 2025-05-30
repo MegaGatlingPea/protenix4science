@@ -9,8 +9,8 @@ current_directory = os.path.dirname(current_file_path)
 code_directory = os.path.dirname(current_directory)
 sys.path.append(code_directory)
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
-os.environ['CUTLASS_PATH'] = '/home/jin_zi_chang/protenix4science/cutlass'  # [Xujun] 添加cutlass路径，用于ds4sci
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ['CUTLASS_PATH'] = '/home/megagatlingpea/workdir/protenix4science/cutlass'  # [Xujun] 添加cutlass路径，用于ds4sci
 os.environ["LAYERNORM_TYPE"] = "fast_layernorm"
 os.environ["USE_DEEPSPEED_EVO_ATTTENTION"] = "true"
 project = "protenix_datacondition"
@@ -55,5 +55,5 @@ sample_diffusion_N_step = 20  # 200 for inference
 # constraint: 计算condition token原子间的最大距离作为constraint，在pairformer中进行约束
 # diffusion: 保留condition atom的坐标，在diffusion模块中进行约束
 # all:包括了上述三种condition类型
-data_condition = 'diffusion'  # ['all', 'data', 'constraint', 'diffusion']
+data_condition = 'all'  # ['all', 'data', 'constraint', 'diffusion']
 # [Xujun] END

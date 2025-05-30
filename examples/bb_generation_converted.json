@@ -6,150 +6,58 @@
           "sequence": "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHGGGGGGGGGGGGGGGGGGGGGGGGGGKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
           "count": 1
         }
-      }
-    ],
-    "name": "1-7pzb",
-    "metadata": {
-      "fpath": "/home/jin_zi_chang/protenix4science/examples/7pzb.pdb",
-      "fixed_atom": {
-        "A86": [
-          "O",
-          "C",
-          "CA"
-        ],
-        "A168": [
-          "NE2",
-          "CD2",
-          "CE1",
-          "CG",
-          "ND1"
-        ],
-        "A197": [
-          "NZ",
-          "CE",
-          "CD"
-        ]
       },
-      "fixed_type": [
-        "proteinbb",
-        "proteinChain",
-        "proteinbb",
-        "proteinChain",
-        "proteinbb",
-        "proteinChain",
-        "proteinbb"
-      ],
-      "fixed": [
-        "47-47",
-        "A86-86",
-        "56-56",
-        "A168-168",
-        "26-26",
-        "A197-197",
-        "48-48"
-      ]
-    }
-  },
-  {
-    "sequences": [
       {
         "proteinChain": {
-          "sequence": "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHGGGGGGGGGGGGGGGGGGGGGGGGGGKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+          "sequence": "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGDGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGMGGGGGGGGGGGGGGGGGGGGGGGGGGKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
           "count": 1
         }
       }
     ],
-    "name": "1-7pzb",
-    "metadata": {
-      "fpath": "/home/jin_zi_chang/protenix4science/examples/7pzb.pdb",
-      "fixed_atom": {
-        "A86": [
-          "O",
-          "C",
-          "CA"
-        ],
-        "A168": [
-          "NE2",
-          "CD2",
-          "CE1",
-          "CG",
-          "ND1"
-        ],
-        "A197": [
-          "NZ",
-          "CE",
-          "CD"
+    "metadata": [
+      {
+        "fixed_atom": {
+          "A86": [
+            "O",
+            "C",
+            "CA"
+          ],
+          "A168": [
+            "NE2",
+            "CD2",
+            "CE1",
+            "CG",
+            "ND1"
+          ],
+          "A197": [
+            "NZ",
+            "CE",
+            "CD"
+          ]
+        },
+        "fixed": [
+          "47-47",
+          "A86-86",
+          "56-56",
+          "A168-168",
+          "26-26",
+          "A197-197",
+          "48-48"
         ]
       },
-      "fixed_type": [
-        "proteinbb",
-        "proteinChain",
-        "proteinbb",
-        "proteinChain",
-        "proteinbb",
-        "proteinChain",
-        "proteinbb"
-      ],
-      "fixed": [
-        "47-47",
-        "A86-86",
-        "56-56",
-        "A168-168",
-        "26-26",
-        "A197-197",
-        "48-48"
-      ]
-    }
-  },
-  {
-    "sequences": [
       {
-        "proteinChain": {
-          "sequence": "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGEGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHGGGGGGGGGGGGGGGGGGGGGGGGGGKGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
-          "count": 1
-        }
+        "fixed_atom": {},
+        "fixed": [
+          "47-47",
+          "B86-98",
+          "56-56",
+          "B168-172",
+          "26-26",
+          "B197-197",
+          "48-48"
+        ]
       }
     ],
-    "name": "3-7pzb",
-    "metadata": {
-      "fpath": "/home/jin_zi_chang/protenix4science/examples/7pzb.pdb",
-      "fixed_atom": {
-        "A86": [
-          "O",
-          "C",
-          "CA"
-        ],
-        "A168": [
-          "NE2",
-          "CD2",
-          "CE1",
-          "CG",
-          "ND1"
-        ],
-        "A197": [
-          "NZ",
-          "CE",
-          "CD"
-        ]
-      },
-      "fixed_type": [
-        "proteinbb",
-        "proteinChain",
-        "proteinbb",
-        "proteinChain",
-        "proteinbb",
-        "proteinChain",
-        "proteinbb"
-      ],
-      "fixed": [
-        "47-47",
-        "A86-86",
-        "56-56",
-        "A168-168",
-        "26-26",
-        "A197-197",
-        "48-48"
-      ]
-    }
+    "name": "7pzb"
   }
 ]
