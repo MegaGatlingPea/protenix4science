@@ -1,0 +1,18 @@
+[
+    {
+        "name": "1qfe",
+        "pdb": "/home/megagatlingpea/workdir/protenix4science/bb_generation_example/1qfe.pdb",
+        "entities": [
+        {
+            "entity_type": "proteinChain",
+            "fixed": "47-47,A86-86,56-56,A143-143,26-26,A170-170,48-48",
+            "fixed_type": "proteinbb, proteinChain, proteinbb, proteinChain, proteinbb, proteinChain, proteinbb",
+            "fixed_atom": {
+            "A86": "O,C,CA",
+            "A143": "NE2,CD2,CE1,CG,ND1",
+            "A170": "NZ,CE,CD"
+            },
+            "length": "180-180"
+        }]
+    }
+]

@@ -91,7 +91,7 @@ class InferenceDataset(Dataset):
         self.data_condition = data_condition
         if self.data_condition:
             self.use_msa = False
-            print("data_condition is True, use_msa is set to False")
+            print("data_condition is True, use_msa is set to False, using all-zero dummy features instead.")
             from protenix.data.utils import convert_bb_configs
             self.inputs = convert_bb_configs(self.input_json_path)
         else:

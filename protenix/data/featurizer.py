@@ -411,7 +411,7 @@ class Featurizer(object):
         }
         for ref_space_uid in np.unique(self.cropped_atom_array.ref_space_uid):
             # [Xujun] START 把mask的残基的backbone原子替换为该polymer的代表残基的backbone原子
-            # protein: GLY, dna: C, rna: DC
+            # protein: GLY, dna: DC, rna: C
             # 小分子、糖、离子等不进行替换
             tmp_atom_array = self.cropped_atom_array[self.cropped_atom_array.ref_space_uid == ref_space_uid]
             tmp_ref_pos = tmp_atom_array.ref_pos

@@ -27,13 +27,13 @@ inference_configs = {
     "dump_dir": f"{code_directory}/output",
     "need_atom_confidence": False,
     "sorted_by_ranking_score": True,
-    "input_json_path": f"{code_directory}/bb_generation_example/bb_all.json",  # Default from inference_demo.sh
+    "input_json_path": f"{code_directory}/bb_generation_example/1qfe.json",  # Default from inference_demo.sh
     "load_checkpoint_path": os.path.join(
         code_directory, "./release_data/checkpoint/model_v0.2.0.pt"
     ),
     "num_workers": 16,
     "use_msa": True,
     # [Zichang] START 增加Data Condition选项
-    "data_condition": 'all',
+    "data_condition": 'data',
     # [Zichang] END
 }

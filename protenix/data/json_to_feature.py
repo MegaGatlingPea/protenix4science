@@ -26,7 +26,7 @@ from protenix.data.tokenizer import AtomArrayTokenizer, TokenArray
 from protenix.data.utils import int_to_letters
 
 # [Zichang] START import predefined backbone atoms and convert metadata
-from protenix.data.constants import PROTEIN_BACKBONE_ATOM_NAMES, NA_BACKBONE_ATOM_NAMES, BACKBONE_ATOM_NAMES
+# from protenix.data.constants import PROTEIN_BACKBONE_ATOM_NAMES, NA_BACKBONE_ATOM_NAMES, BACKBONE_ATOM_NAMES
 from protenix.data.utils import convert_metadata
 # [Zichang] END
 
@@ -295,8 +295,9 @@ class SampleDictToFeatures:
                         specific_atom_mask = res_mask & (atom_array.atom_name == atom_name)
                         atom_mask[specific_atom_mask] = True
             atom_mask += token_mask
-            backbone_atom_mask = np.isin(atom_array.atom_name, BACKBONE_ATOM_NAMES)
-            atom_mask = atom_mask | backbone_atom_mask
+            # these 2 lines should be removed, as in the func:featurizer.py/get_ref_feat can handle this properly
+            # backbone_atom_mask = np.isin(atom_array.atom_name, BACKBONE_ATOM_NAMES)
+            # atom_mask = atom_mask | backbone_atom_mask
             atom_array.set_annotation("condition_atom_mask", atom_mask)
             atom_array.set_annotation("condition_token_mask", token_mask)
         return atom_array
