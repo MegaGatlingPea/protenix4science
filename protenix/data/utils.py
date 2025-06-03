@@ -818,8 +818,8 @@ def convert_bb_configs(config_file_path, dump=False, output_path=None):
             for k in range(len(bb_config['entities'])):
                 bb_config_entity = bb_config['entities'][k]
 
-                # if not ligand
-                if bb_config_entity['entity_type'] != 'ligand':
+                # if not ligand or ion
+                if bb_config_entity['entity_type'] not in ['ligand', 'ion']:
                 
                     # Parse configuration string
                     bb_config_entity['fixed'] = bb_config_entity['fixed'].split(',')
