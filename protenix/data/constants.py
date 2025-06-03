@@ -316,6 +316,9 @@ BACKBONE_ATOM_NAMES = PROTEIN_BACKBONE_ATOM_NAMES + NA_BACKBONE_ATOM_NAMES
 PROTEIN_REP_RESIDUE = 'GLY'
 RNA_REP_RESIDUE = 'C'
 DNA_REP_RESIDUE = 'DC'
+# [Zichang] START 增加 lig mask token
+LIG_REP_ATOM = '*'
+# [Zichang] END
 # [Xujun] END
 
 rna_order_with_x = {

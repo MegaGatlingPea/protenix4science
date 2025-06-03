@@ -32,7 +32,7 @@ import json
 from biotite.structure.io import load_structure
 import biotite.structure as struc
 from protenix.data.constants import mmcif_restype_3to1 as AA_3TO1
-from protenix.data.constants import PROTEIN_REP_RESIDUE, DNA_REP_RESIDUE, RNA_REP_RESIDUE
+from protenix.data.constants import PROTEIN_REP_RESIDUE, DNA_REP_RESIDUE, RNA_REP_RESIDUE, LIG_REP_ATOM
 # [Zichang] END
 
 from protenix.data.constants import DNA_STD_RESIDUES, PRO_STD_RESIDUES, RNA_STD_RESIDUES
@@ -807,7 +807,7 @@ def convert_bb_configs(config_file_path, dump=False, output_path=None):
         
         for i in range(len(bb_configs)):
             bb_config = bb_configs[i]
-            
+
             # Load structure once for this bb_config
             stack = load_structure(bb_config['pdb'])
             
@@ -817,69 +817,84 @@ def convert_bb_configs(config_file_path, dump=False, output_path=None):
             # Process each entity in this bb_config
             for k in range(len(bb_config['entities'])):
                 bb_config_entity = bb_config['entities'][k]
-                
-                # Parse configuration string
-                bb_config_entity['fixed'] = bb_config_entity['fixed'].split(',')
-                bb_config_entity['fixed_type'] = bb_config_entity['fixed_type'].split(', ')
-                for fixed_residue, bb_atom in bb_config_entity['fixed_atom'].items():
-                    bb_config_entity['fixed_atom'][fixed_residue] = bb_atom.split(',')
-                
-                # build infer sequence
-                infer_seq = []
 
-                for j in range(len(bb_config_entity['fixed'])):
-                    if bb_config_entity['fixed_type'][j] in ['proteinbb', 'dnabb', 'rnabb']:
-                        min_len, max_len = map(int, bb_config_entity['fixed'][j].split('-'))
-                        assert min_len <= max_len
-                        # random select length between min_len and max_len, need further modification
-                        length = np.random.randint(min_len, max_len + 1)
-                        for _ in range(length):
-                            if bb_config_entity['fixed_type'][j] == 'proteinbb':
-                                infer_seq.append(AA_3TO1[PROTEIN_REP_RESIDUE])
-                            elif bb_config_entity['fixed_type'][j] == 'dnabb':
-                                infer_seq.append(DNA_REP_RESIDUE[1]) # 'DC -> C'
-                            elif bb_config_entity['fixed_type'][j] == 'rnabb':
-                                infer_seq.append(RNA_REP_RESIDUE) # 'C'
-                    elif bb_config_entity['fixed_type'][j] in ['proteinChain', 'dnaSequence', 'rnaSequence']:
-                        # Parse chain and residue range (format: B86-98 or B86-86)
-                        chain_res = bb_config_entity['fixed'][j]
-                        parts = chain_res.split('-')
-                        
-                        # Extract chain_id, start_res, end_res
-                        chain_id = parts[0][0]  # First character is chain ID
-                        start_res = int(parts[0][1:])  # Rest of first part is start residue
-                        end_res = int(parts[1])  # Second part is end residue
-                        
-                        # Add all residues in the range (inclusive)
-                        for res_id in range(start_res, end_res + 1):
-                            mask = (stack.chain_id == chain_id) & (stack.res_id == res_id)
-                            if np.any(mask):
-                                res_name = stack[np.where(mask)[0][0]].res_name
-                                if len(res_name) == 3:
-                                    infer_seq.append(AA_3TO1[res_name])
-                                elif len(res_name) == 2:
-                                    infer_seq.append(res_name[1])
-                                else:
-                                    infer_seq.append(res_name)
+                # if not ligand
+                if bb_config_entity['entity_type'] != 'ligand':
                 
-                infer_seq = ''.join(infer_seq)
-                
-                # Add sequence for this entity
-                output_dict['sequences'].append({
-                    bb_config_entity['entity_type']: {
-                        "sequence": infer_seq,
-                        "count": 1
-                    }
-                })
+                    # Parse configuration string
+                    bb_config_entity['fixed'] = bb_config_entity['fixed'].split(',')
+                    bb_config_entity['fixed_type'] = bb_config_entity['fixed_type'].split(', ')
+                    for fixed_residue, bb_atom in bb_config_entity['fixed_atom'].items():
+                        bb_config_entity['fixed_atom'][fixed_residue] = bb_atom.split(',')
+                    
+                    # build infer sequence
+                    infer_seq = []
 
-                # Add metadata for this entity
-                output_dict['metadata'].append({
-                    'fixed_atom': bb_config_entity['fixed_atom'],
-                    'fixed': bb_config_entity['fixed']
-                })
-            
-            # Add the completed output_dict to output_json
-            output_json.append(output_dict)
+                    for j in range(len(bb_config_entity['fixed'])):
+                        if bb_config_entity['fixed_type'][j] in ['proteinbb', 'dnabb', 'rnabb']:
+                            min_len, max_len = map(int, bb_config_entity['fixed'][j].split('-'))
+                            assert min_len <= max_len
+                            # random select length between min_len and max_len, need further modification
+                            length = np.random.randint(min_len, max_len + 1)
+                            for _ in range(length):
+                                if bb_config_entity['fixed_type'][j] == 'proteinbb':
+                                    infer_seq.append(AA_3TO1[PROTEIN_REP_RESIDUE])
+                                elif bb_config_entity['fixed_type'][j] == 'dnabb':
+                                    infer_seq.append(DNA_REP_RESIDUE[1]) # 'DC -> C'
+                                elif bb_config_entity['fixed_type'][j] == 'rnabb':
+                                    infer_seq.append(RNA_REP_RESIDUE) # 'C'
+                        elif bb_config_entity['fixed_type'][j] in ['proteinChain', 'dnaSequence', 'rnaSequence']:
+                            # Parse chain and residue range (format: B86-98 or B86-86)
+                            chain_res = bb_config_entity['fixed'][j]
+                            parts = chain_res.split('-')
+                            
+                            # Extract chain_id, start_res, end_res
+                            chain_id = parts[0][0]  # First character is chain ID
+                            start_res = int(parts[0][1:])  # Rest of first part is start residue
+                            end_res = int(parts[1])  # Second part is end residue
+                            
+                            # Add all residues in the range (inclusive)
+                            for res_id in range(start_res, end_res + 1):
+                                mask = (stack.chain_id == chain_id) & (stack.res_id == res_id)
+                                if np.any(mask):
+                                    res_name = stack[np.where(mask)[0][0]].res_name
+                                    if len(res_name) == 3:
+                                        infer_seq.append(AA_3TO1[res_name])
+                                    elif len(res_name) == 2:
+                                        infer_seq.append(res_name[1])
+                                    else:
+                                        infer_seq.append(res_name)
+                    
+                    infer_seq = ''.join(infer_seq)
+                    
+                    # Add sequence for this entity
+                    output_dict['sequences'].append({
+                        bb_config_entity['entity_type']: {
+                            "sequence": infer_seq,
+                            "count": 1
+                        }
+                    })
+
+                    # Add metadata for this entity
+                    output_dict['metadata'].append({
+                        'fixed_atom': bb_config_entity['fixed_atom'],
+                        'fixed': bb_config_entity['fixed']
+                    })
+                
+                # if ligand or ion, now only support known ligand or ion instead of generating
+                elif bb_config_entity['entity_type'] in ['ligand', 'ion']:
+                    output_dict['sequences'].append({
+                        bb_config_entity['entity_type']: {
+                            bb_config_entity['entity_type']: bb_config_entity['mol_str'],
+                            'count': 1
+                        }
+                    })
+                    output_dict['metadata'].append({
+                        'fixed_atom': {},
+                        'fixed': {}
+                    })
+                # Add the completed output_dict to output_json
+                output_json.append(output_dict)
 
     # for test
     if dump:

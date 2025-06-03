@@ -275,6 +275,7 @@ class SampleDictToFeatures:
             token_mask = np.zeros(len(atom_array), dtype=bool)
             atom_mask = np.zeros(len(atom_array), dtype=bool)
             fixed_res = []
+            
             for period in metadata['fixed']:
                 if period[0].isalpha():
                     chain_id = period.split('-')[0][0]
@@ -298,8 +299,12 @@ class SampleDictToFeatures:
             # these 2 lines should be removed, as in the func:featurizer.py/get_ref_feat can handle this properly
             # backbone_atom_mask = np.isin(atom_array.atom_name, BACKBONE_ATOM_NAMES)
             # atom_mask = atom_mask | backbone_atom_mask
-            atom_array.set_annotation("condition_atom_mask", atom_mask)
-            atom_array.set_annotation("condition_token_mask", token_mask)
+            other_mask = atom_array.hetero # ligand/ion/etc is hetero atom
+            # ligands are all fixed for now 
+            atom_mask[other_mask] = True 
+            token_mask[other_mask] = True
+            atom_array.set_annotation("condition_atom_mask", atom_mask.astype(bool))
+            atom_array.set_annotation("condition_token_mask", token_mask.astype(bool))
         return atom_array
     # [Zichang] END
     
